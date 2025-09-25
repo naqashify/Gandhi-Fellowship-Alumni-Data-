@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alumni Dashboard - Corrected</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body data-theme="dark">
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <h1 class="dashboard-title">Alumni Dashboard</h1>
+                    <span class="subtitle">Fellowship Program Analytics - Corrected Data</span>
+                </div>
+                <div class="header-controls">
+                    <div class="theme-toggle-container">
+                        <span class="theme-label">Light</span>
+                        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                            <div class="toggle-slider"></div>
+                        </button>
+                        <span class="theme-label">Dark</span>
+                    </div>
+                    <button class="btn btn--primary export-btn" id="exportPDF">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14,2 14,8 20,8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10,9 9,9 8,9"/>
+                        </svg>
+                        Export PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-btn" id="mobileMenuBtn">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- Main Dashboard Content -->
+    <main class="dashboard-main">
+        <div class="container">
+            <!-- Summary Cards -->
+            <section class="summary-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="8.5" cy="7" r="4"/>
+                                <path d="m22 21-3.5-3.5"/>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-number" id="totalAlumniCount">1,803</h3>
+                            <p class="stat-label">Total Alumni</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="16" y1="2" x2="16" y2="6"/>
+                                <line x1="8" y1="2" x2="8" y2="6"/>
+                                <line x1="3" y1="10" x2="21" y2="10"/>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-number" id="totalBatches">16</h3>
+                            <p class="stat-label">Batches</p>
+                        </div>
+                    </div>
+                    <div class="stat-card support-card">
+                        <div class="stat-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 12l2 2 4-4"/>
+                                <circle cx="12" cy="12" r="9"/>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-number" id="supportYesCount">1,279</h3>
+                            <p class="stat-label">Supporting Mentoring</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                                <polyline points="7.5,4.21 12,6.81 16.5,4.21"/>
+                                <polyline points="7.5,19.79 7.5,14.6 3,12"/>
+                                <polyline points="21,12 16.5,14.6 16.5,19.79"/>
+                            </svg>
+                        </div>
+                        <div class="stat-content">
+                            <h3 class="stat-number" id="statesCount">29</h3>
+                            <p class="stat-label">States Represented</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Charts Section -->
+            <section class="charts-section">
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Batch Distribution</h3>
+                                <p class="chart-subtitle">Exact alumni count across all batches (B-13: COVID impact)</p>
+                            </div>
+                            <div class="chart-wrapper" style="position: relative; height: 300px;">
+                                <canvas id="batchChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Support Status</h3>
+                                <p class="chart-subtitle">Alumni mentoring support availability</p>
+                            </div>
+                            <div class="chart-wrapper" style="position: relative; height: 300px;">
+                                <canvas id="supportChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- State Distribution List -->
+            <section class="state-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>State Distribution</h3>
+                        <p class="chart-subtitle">Alumni distribution across Indian states (click to filter)</p>
+                    </div>
+                    <div class="state-list-container">
+                        <div id="stateList" class="state-list">
+                            <!-- State distribution will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Alumni Table Section -->
+            <section class="table-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Alumni Directory - CORRECTED</h3>
+                        <div class="table-controls">
+                            <div class="search-container">
+                                <input type="text" id="searchInput" placeholder="Search alumni (e.g., 'Shreya Tiwari', 'Gitanjali Babbar')..." class="search-input">
+                                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="11" cy="11" r="8"/>
+                                    <path d="m21 21-4.35-4.35"/>
+                                </svg>
+                            </div>
+                            <div class="filter-controls">
+                                <select id="batchFilter" class="filter-select">
+                                    <option value="">All Batches</option>
+                                </select>
+                                <select id="stateFilter" class="filter-select">
+                                    <option value="">All States</option>
+                                </select>
+                                <select id="supportFilter" class="filter-select">
+                                    <option value="">All Support Status</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                    <option value="Unknown">Unknown</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table id="alumniTable" class="alumni-table">
+                            <thead>
+                                <tr>
+                                    <th data-sort="name">Name</th>
+                                    <th data-sort="batch">Batch</th>
+                                    <th data-sort="state">State</th>
+                                    <th data-sort="organization">Organization</th>
+                                    <th data-sort="designation">Designation</th>
+                                    <th data-sort="mobile">Mobile</th>
+                                    <th data-sort="support">Support</th>
+                                    <th>LinkedIn</th>
+                                </tr>
+                            </thead>
+                            <tbody id="alumniTableBody">
+                                <!-- Table content will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-pagination">
+                        <div class="pagination-info">
+                            Showing <span id="showingStart">1</span> to <span id="showingEnd">50</span> of <span id="totalRecords">1,803</span> alumni
+                        </div>
+                        <div class="pagination-controls">
+                            <button id="prevPage" class="pagination-btn">Previous</button>
+                            <span id="pageNumbers" class="page-numbers"></span>
+                            <button id="nextPage" class="pagination-btn">Next</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Mobile Navigation Overlay -->
+    <div class="mobile-nav-overlay" id="mobileNavOverlay">
+        <div class="mobile-nav-content">
+            <button class="mobile-nav-close" id="mobileNavClose">&times;</button>
+            <nav class="mobile-nav">
+                <a href="#summary" class="nav-link">Overview</a>
+                <a href="#charts" class="nav-link">Analytics</a>
+                <a href="#state" class="nav-link">States</a>
+                <a href="#table" class="nav-link">Directory</a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="loading-spinner" id="loadingSpinner">
+        <div class="spinner"></div>
+        <p>Loading exact alumni data from Excel...</p>
+    </div>
+
+    <!-- Data Load Error -->
+    <div class="error-message" id="errorMessage" style="display: none;">
+        <div class="error-content">
+            <h3>Data Loading Error</h3>
+            <p>Unable to load the corrected alumni data. Please check your connection and try again.</p>
+            <button class="btn btn--primary" onclick="location.reload()">Retry</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
